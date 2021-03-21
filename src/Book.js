@@ -9,12 +9,18 @@ class Book extends React.Component {
     this.props.onMoveToShelf(toShelf, this.props.book);
   };
 
+  getThumbNail = (book) => {
+    return book.imageLinks.smallThumbnail 
+    ? book.imageLinks.smallThumbnail 
+    : 'https://via.placeholder.com/128x193.png?text=Book%20Cover'
+  };
+
   render() {
     const { book } = this.props;
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.smallThumbnail}")` }}></div>
+          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${this.getThumbNail.bind(this, book)}")` }}></div>
           <div className="book-shelf-changer">
             <select value={book.shelf} onChange={this.onChangeCallback}>
               <option value="move" disabled>Move to...</option>
