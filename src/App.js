@@ -11,7 +11,17 @@ class BooksApp extends React.Component {
 
   componentDidMount = () => {
     BooksAPI.getAll()
-      .then(books => this.setState({ books: books }))
+      .then(books => this.setState({ books: books }));
+  };
+
+  onMoveToShelf = (toShelf, book) => {
+    let items = [...this.state.books];
+    let index = this.state.books.findIndex(item => item.id === book.id);
+    let item = {...items[index]};
+    item.shelf = toShelf;
+    items[index] = item;
+    this.setState({books: items});
+    BooksAPI.update(book, toShelf);
   };
 
   render() {
@@ -27,14 +37,17 @@ class BooksApp extends React.Component {
                 <Bookshelf
                   title='Currently Reading'
                   booksOnThisShelf={this.state.books && this.state.books.filter(book => book.shelf === 'currentlyReading')}
+                  onMoveToShelf={this.onMoveToShelf}
                 />
                 <Bookshelf
                   title='Want to Read'
                   booksOnThisShelf={this.state.books && this.state.books.filter(book => book.shelf === 'wantToRead')}
+                  onMoveToShelf={this.onMoveToShelf}
                 />
                 <Bookshelf
                   title='Read'
                   booksOnThisShelf={this.state.books && this.state.books.filter(book => book.shelf === 'read')}
+                  onMoveToShelf={this.onMoveToShelf}
                 />
               </div>
             </div>
@@ -61,7 +74,7 @@ class BooksApp extends React.Component {
         
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
-                */}
+                  */}
                   <input type="text" placeholder="Search by title or author" />
                 </div>
               </div>
@@ -75,4 +88,4 @@ class BooksApp extends React.Component {
   }
 }
 
-export default BooksApp
+export default BooksApp;
