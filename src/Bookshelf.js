@@ -13,6 +13,7 @@ class Bookshelf extends React.Component {
                 <li key={book.id}>
                   <Book
                     book={book}
+                    shelf={book.shelf}
                     onMoveToShelf={this.props.onMoveToShelf.bind(this)}
                   />
                 </li>

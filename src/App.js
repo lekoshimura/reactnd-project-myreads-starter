@@ -18,14 +18,27 @@ class BooksApp extends React.Component {
   onMoveToShelf = (toShelf, book) => {
     let items = [...this.state.books];
     let index = this.state.books.findIndex(item => item.id === book.id);
-    let item = { ...items[index] };
-    item.shelf = toShelf;
-    items[index] = item;
+    let item;
+    if (index === -1) {
+      // is adding
+      item = book;
+      items.push(book);
+    } else {
+      // is moving
+      item = { ...items[index] };
+    }
+    if (toShelf === 'none') {
+      items.splice(index, 1)
+    } else {
+      item.shelf = toShelf;
+      items[index] = item;
+    }
     this.setState({ books: items });
     BooksAPI.update(book, toShelf);
   };
 
   render() {
+    // console.log('state', this.state.books)
     return (
       <div className="app">
         <Route exact path='/' render={() => (
@@ -62,7 +75,9 @@ class BooksApp extends React.Component {
         <Route
           path='/search'
           render={() => (
-            <SearchBooks />
+            <SearchBooks
+              booksOnShelf={this.state.books}
+              onMoveToShelf={this.onMoveToShelf} />
           )} />
       </div>
     )
