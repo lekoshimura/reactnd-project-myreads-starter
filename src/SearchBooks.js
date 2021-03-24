@@ -11,11 +11,24 @@ class SearchBooks extends React.Component {
   onSearchChange = (event) => {
     const searchTerm = event.target.value;
     if (searchTerm.length === 0) {
-      this.setState({searchResult: []});
+      this.setState({ searchResult: [] });
     } else {
       BooksAPI.search(searchTerm)
-        .then(data => this.setState({searchResult: data}))
+        .then(data => {
+          if (data.error) {
+            this.setState({ searchResult: [] })
+          } else {
+            this.setState({ searchResult: data })
+          }
+        })
     };
+  };
+
+  getShelf = (book) => {
+    const bookFound = this.props.booksOnShelf.filter(item => item.id === book.id);
+    return bookFound && bookFound.shelf
+      ? bookFound.shelf
+      : 'none';
   };
 
   render() {
@@ -42,8 +55,11 @@ class SearchBooks extends React.Component {
             {this.state.searchResult && this.state.searchResult.map(
               book => (
                 <li key={book.id}>
+                  <p>{this.getShelf(book)}</p>
                   <Book
                     book={book}
+                    shelf={this.getShelf(book)}
+                    onMoveToShelf={this.props.onMoveToShelf.bind(this)}
                   />
                 </li>
               )
