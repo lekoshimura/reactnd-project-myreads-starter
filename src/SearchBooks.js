@@ -25,7 +25,7 @@ class SearchBooks extends React.Component {
   };
 
   getShelf = (book) => {
-    const bookFound = this.props.booksOnShelf.filter(item => item.id === book.id);
+    const bookFound = this.props.booksOnShelf.filter(item => item.id === book.id)[0];
     return bookFound && bookFound.shelf
       ? bookFound.shelf
       : 'none';
@@ -55,7 +55,6 @@ class SearchBooks extends React.Component {
             {this.state.searchResult && this.state.searchResult.map(
               book => (
                 <li key={book.id}>
-                  <p>{this.getShelf(book)}</p>
                   <Book
                     book={book}
                     shelf={this.getShelf(book)}
